@@ -55,7 +55,10 @@ func (ali *Alidns) Init(dnsConf *config.DnsConfig, ipv4cache *util.IpCache, ipv6
 	} else {
 		ali.TTL = dnsConf.TTL
 	}
-	ali.httpClient = dnsConf.GetHTTPClient()
+	// Use the default route for AliDNS API calls. The configured HTTP interface
+	// may be bound to the IPv4/IPv6 address used for detection, which can make
+	// provider API calls fail when the endpoint resolves to the other IP family.
+	ali.httpClient = util.CreateHTTPClient()
 }
 
 // AddUpdateDomainRecords 添加或更新IPv4/IPv6记录
